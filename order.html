@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Place Order</title>
+    <script>
+        // JavaScript function to handle form submission
+        function submitOrder(event) {
+            event.preventDefault(); // Prevent the page from refreshing
+
+            // Gather form data
+            const medicineName = document.getElementById('medicine_name').value;
+            const quantity = document.getElementById('quantity').value;
+            const deliveryAddress = document.getElementById('delivery_address').value;
+            const paymentMethod = document.getElementById('payment_method').value;
+
+            // Check if all fields are filled
+            if (!medicineName || !quantity || !deliveryAddress || !paymentMethod) {
+                alert("Please fill out all fields.");
+                return false;
+            }
+
+            // Display a confirmation message
+            const confirmationMessage = `
+                <h3>Order Confirmed!</h3>
+                <p>Thank you for your order. Here are the details:</p>
+                <ul>
+                    <li><strong>Medicine Name:</strong> ${medicineName}</li>
+                    <li><strong>Quantity:</strong> ${quantity}</li>
+                    <li><strong>Delivery Address:</strong> ${deliveryAddress}</li>
+                    <li><strong>Payment Method:</strong> ${paymentMethod}</li>
+                </ul>
+            `;
+
+            document.getElementById('orderConfirmation').innerHTML = confirmationMessage;
+
+            // Optionally clear the form fields
+            document.getElementById('orderForm').reset();
+
+            return false; // Prevent further form processing
+        }
+    </script>
+</head>
+<body>
+    <h1>Place Your Order</h1>
+    <form id="orderForm" onsubmit="return submitOrder(event)">
+        <label for="medicine_name">Medicine Name:</label>
+        <input type="text" id="medicine_name" name="medicine_name" required>
+        
+        <label for="quantity">Quantity:</label>
+        <input type="number" id="quantity" name="quantity" required>
+        
+        <label for="delivery_address">Delivery Address:</label>
+        <textarea id="delivery_address" name="delivery_address" required></textarea>
+        
+        <label for="payment_method">Payment Method:</label>
+        <select id="payment_method" name="payment_method" required>
+            <option value="Credit Card">Credit Card</option>
+            <option value="Cash on Delivery">Cash on Delivery</option>
+            <option value="UPI">UPI</option>
+        </select>
+        
+        <button type="submit">Place Order</button>
+    </form>
+
+    <div id="orderConfirmation" style="margin-top: 20px;"></div>
+</body>
+</html>

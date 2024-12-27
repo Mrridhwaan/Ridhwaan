@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Secure Login - Medicine Delivery</title>
+    <script src="https://cdn.jsdelivr.net/npm/crypto-js@4.1.1/crypto-js.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            text-align: center;
+        }
+        header {
+            background-color: #04c484;
+            color: white;
+            padding: 10px 0;
+        }
+        main {
+            padding: 20px;
+        }
+        input[type="text"], input[type="password"] {
+            padding: 10px;
+            margin: 10px 0;
+            width: 50%;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .btn {
+            background-color: #06b977;
+            color: white;
+            padding: 10px 20px;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 18px;
+            display: inline-block;
+        }
+        .btn:hover {
+            background-color: #45a049;
+        }
+        #notification {
+            display: none;
+            margin: 20px auto;
+            padding: 15px;
+            width: 50%;
+            background-color: #dff0d8;
+            color: #3c763d;
+            border: 1px solid #d6e9c6;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Secure Login to Medi-aid</h1>
+    </header>
+    <main>
+        <div id="notification"></div>
+        <form id="loginForm">
+            <input type="text" id="username" name="username" placeholder="Username" required><br>
+            <input type="password" id="password" name="password" placeholder="Password" required><br>
+            <button type="submit" class="btn">Login</button>
+        </form>
+    </main>
+    <script>
+        // Precomputed hash of "admin123"
+        const storedHashedPassword = "0192023a7bbd73250516f069df18b500"; // Example hashed value
+
+        document.getElementById('loginForm').addEventListener('submit', async function(event) {
+            event.preventDefault(); // Prevent default form submission
+
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+
+            // Hash the entered password
+            const hashedPassword = CryptoJS.MD5(password).toString();
+
+            if (username === "admin" && hashedPassword === storedHashedPassword) {
+                // Create a secure token (e.g., JWT or random string)
+                const token = btoa(`${username}:${new Date().toISOString()}`);
+                
+                // Store the token in a secure HTTP-only cookie
+                document.cookie = `authToken=${token}; Secure; HttpOnly; SameSite=Strict`;
+
+                const notification = document.getElementById('notification');
+                notification.textContent = `Login successful! Welcome to Medi-aid, ${username}.`;
+                notification.style.display = 'block';
+
+                setTimeout(() => {
+                    window.location.href = "order.html"; // Redirect to another page
+                }, 2000);
+            } else {
+                alert('Login failed. Please check your username and password.');
+            }
+        });
+
+        // Example: Function to read cookies
+        function getCookie(name) {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.startsWith(name + '=')) {
+                    return cookie.substring(name.length + 1);
+                }
+            }
+            return null;
+        }
+    </script>
+</body>
+</html>
